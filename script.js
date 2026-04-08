@@ -423,11 +423,55 @@ function updateStorageBadge(meta) {
   }
 }
 
-// ── INIT ───────────────────────────────────────────────────────
-const restored = loadFromStorage();
-if (!restored) {
+// ── INIT — Load from data.csv → localStorage → DEFAULT_DATA ────
+async function init() {
+  // 1️⃣ Try fetching data.csv (works on GitHub Pages & local server)
+  try {
+    const res = await fetch("data.csv");
+    if (res.ok) {
+      const text = await res.text();
+      const parsed = parseCSV(text);
+      if (parsed.length > 0) {
+        state.data = parsed.map(row => ({
+          name:      row.name      || row.Name      || row.event     || row.Event     || "Unknown",
+          currency:  row.currency  || row.Currency  || "USD",
+          impact:    (row.impact   || row.Impact    || "medium").toLowerCase(),
+          actual:    row.actual    || row.Actual    ? parseFloat(row.actual    || row.Actual)    : null,
+          forecast:  row.forecast  || row.Forecast  ? parseFloat(row.forecast  || row.Forecast)  : null,
+          previous:  row.previous  || row.Previous  ? parseFloat(row.previous  || row.Previous)  : null,
+          timestamp: row.timestamp || row.Timestamp || row.date || row.Date || "—",
+        }));
+
+        // Save to localStorage so it persists for this browser too
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+        localStorage.setItem(STORAGE_META_KEY, JSON.stringify({
+          filename: "data.csv",
+          savedAt:  new Date().toISOString(),
+          count:    state.data.length,
+        }));
+
+        updateStorageBadge({ filename: "data.csv", count: state.data.length });
+        showToast(`✓ Loaded ${state.data.length} indicators from data.csv`, false);
+        renderCards();
+        return;
+      }
+    }
+  } catch(e) {
+    // fetch failed — try next fallback
+  }
+
+  // 2️⃣ Try localStorage (previously uploaded via file picker)
+  const restored = loadFromStorage();
+  if (restored) {
+    renderCards();
+    return;
+  }
+
+  // 3️⃣ Final fallback — built-in default data
   state.data = [...DEFAULT_DATA];
   updateStorageBadge();
+  showToast("Showing default data — upload data.csv to customize", false);
+  renderCards();
 }
-renderCards();
 
+init();
