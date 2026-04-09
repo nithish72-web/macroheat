@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Economic Heatmap — Trading Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- BACKGROUND GRID -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <div>
+          <div class="logo-title">MACROHEAT</div>
+          <div class="logo-sub">US Economic Intelligence</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="live-badge">
+        <span class="pulse-dot"></span>
+        LIVE
+      </div>
+      <div class="clock" id="clock">--:--:-- UTC</div>
+    </div>
+    <div class="header-right">
+      <div class="storage-badge" id="storageBadge" style="display:none;">
+        <span class="storage-dot">💾</span>
+        <span id="storageBadgeText">Saved</span>
+      </div>
+      <div class="upload-zone clear-btn" id="clearBtn" onclick="clearSavedData()">
+        <span class="upload-icon">✕</span>
+        <span>Clear Data</span>
+      </div>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <span class="upload-icon">↑</span>
+        <span>Upload Data</span>
+        <input type="file" id="fileInput" accept=".csv,.json" hidden />
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTROLS BAR -->
+  <section class="controls-bar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search indicators..." />
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn high" data-filter="high">● High</button>
+      <button class="filter-btn medium" data-filter="medium">● Medium</button>
+      <button class="filter-btn low" data-filter="low">● Low</button>
+    </div>
+    <div class="auto-refresh-wrap">
+      <label class="toggle-label" for="autoRefresh">
+        <input type="checkbox" id="autoRefresh" />
+        <span class="toggle-slider"></span>
+        <span class="toggle-text">Auto-Refresh</span>
+      </label>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value" id="statBullish">0</span>
+      <span class="stat-label">Bullish</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value bearish" id="statBearish">0</span>
+      <span class="stat-label">Bearish</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value neutral" id="statNeutral">0</span>
+      <span class="stat-label">Neutral</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value" id="statTotal">0</span>
+      <span class="stat-label">Total Events</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value" id="statSource" style="font-size:11px; letter-spacing:0.04em;">—</span>
+      <span class="stat-label">Data Source</span>
+    </div>
+    <div class="usd-index">
+      <span class="usd-label">USD INDEX</span>
+      <span class="usd-value" id="usdSentiment">—</span>
+    </div>
+  </section>
+
+  <!-- HEATMAP GRID -->
+  <main class="heatmap-grid" id="heatmapGrid">
+    <!-- Cards injected by JS -->
+  </main>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-icon">◈</div>
+    <div class="empty-title">No indicators match your filter</div>
+    <div class="empty-sub">Try adjusting your search or impact filter</div>
+  </div>
+
+  <!-- TOOLTIP -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>MACROHEAT © 2025 — US Economic Heatmap Terminal</span>
+    <span>Data: CSV / JSON Upload · Not financial advice</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
