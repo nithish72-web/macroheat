@@ -475,4 +475,28 @@ async function init() {
 }
 
 init();
+// --- SCROLL ANIMATION OBSERVER ---
+    
+    // Grab all elements that have the 'reveal' class
+    const revealElements = document.querySelectorAll('.reveal');
+
+    // Create the observer
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            // If the element crosses into the screen
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                
+                // Optional: Stop observing once it's revealed (so it doesn't hide when scrolling up)
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, {
+        root: null,
+        threshold: 0.15, // Triggers when 15% of the element is visible
+        rootMargin: "0px 0px -50px 0px" // Triggers slightly before it fully hits the bottom of the screen
+    });
+
+    // Tell the observer to watch every '.reveal' element
+    revealElements.forEach(el => scrollObserver.observe(el));
 
